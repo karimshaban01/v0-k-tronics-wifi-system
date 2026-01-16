@@ -24,10 +24,13 @@ export function SalesStats() {
   })
   const [chartData, setChartData] = useState<any[]>([])
 
+  const formatPrice = (price: number) => {
+    return price.toLocaleString("sw-TZ")
+  }
+
   useEffect(() => {
     const purchasedVouchers: PurchasedVoucher[] = JSON.parse(localStorage.getItem("purchasedVouchers") || "[]")
 
-    // Calculate actual revenue from purchased vouchers
     const totalRevenue = purchasedVouchers.reduce((sum, v) => sum + v.price, 0)
     const totalVouchers = purchasedVouchers.length
     const activeVouchers = purchasedVouchers.filter((v) => v.status === "active").length
@@ -50,14 +53,13 @@ export function SalesStats() {
       planStats[voucher.plan].revenue += voucher.price
     })
 
-    // Convert to chart data format
     const data = Object.entries(planStats).map(([planName, stats]) => ({
-      name: planName.replace(" Access", "").replace(" Pass", ""),
-      sales: stats.count,
-      revenue: stats.revenue,
+      name: planName.replace("Pasi ya ", ""),
+      mauzo: stats.count,
+      mapato: stats.revenue,
     }))
 
-    setChartData(data.length > 0 ? data : [{ name: "No Sales", sales: 0, revenue: 0 }])
+    setChartData(data.length > 0 ? data : [{ name: "Hakuna Mauzo", mauzo: 0, mapato: 0 }])
   }, [])
 
   return (
@@ -65,16 +67,16 @@ export function SalesStats() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Jumla ya Mapato</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">KSH {stats.totalRevenue.toLocaleString()}</div>
+            <div className="text-3xl font-bold">TSH {formatPrice(stats.totalRevenue)}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Vouchers</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Jumla ya Vocha</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{stats.totalVouchers}</div>
@@ -83,7 +85,7 @@ export function SalesStats() {
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Active</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Hai</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-green-600">{stats.activeVouchers}</div>
@@ -92,7 +94,7 @@ export function SalesStats() {
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Expired</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Zimeisha</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-muted-foreground">{stats.expiredVouchers}</div>
@@ -102,8 +104,8 @@ export function SalesStats() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Sales by Plan</CardTitle>
-          <CardDescription>Voucher sales and revenue breakdown by plan type</CardDescription>
+          <CardTitle>Mauzo kwa Mpango</CardTitle>
+          <CardDescription>Uchambuzi wa mauzo na mapato ya vocha kwa aina ya mpango</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="h-80 w-full">
@@ -120,8 +122,8 @@ export function SalesStats() {
                   labelStyle={{ color: "hsl(var(--foreground))" }}
                 />
                 <Legend />
-                <Bar dataKey="sales" fill="hsl(var(--chart-1))" name="Sales" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="revenue" fill="hsl(var(--chart-2))" name="Revenue (KSH)" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="mauzo" fill="hsl(var(--chart-1))" name="Mauzo" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="mapato" fill="hsl(var(--chart-2))" name="Mapato (TSH)" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

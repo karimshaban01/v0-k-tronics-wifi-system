@@ -72,21 +72,29 @@ export function VoucherList() {
     URL.revokeObjectURL(url)
   }
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("sw-TZ", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    })
+  }
+
   const filteredRolls = rolls.filter((roll) => roll.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
   return (
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Voucher Rolls</CardTitle>
-          <CardDescription>Manage your uploaded voucher rolls</CardDescription>
+          <CardTitle>Mabandiko ya Vocha</CardTitle>
+          <CardDescription>Simamia mabandiko yako ya vocha yaliyopakiwa</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="mb-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="Search voucher rolls..."
+                placeholder="Tafuta mabandiko ya vocha..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -97,28 +105,28 @@ export function VoucherList() {
           {filteredRolls.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Upload className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No voucher rolls uploaded yet</p>
-              <p className="text-sm">Upload your first voucher roll to get started</p>
+              <p>Hakuna mabandiko ya vocha yaliyopakiwa bado</p>
+              <p className="text-sm">Pakia bandiko lako la kwanza la vocha kuanza</p>
             </div>
           ) : (
             <div className="border rounded-lg">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Roll Name</TableHead>
-                    <TableHead>Upload Date</TableHead>
-                    <TableHead>Vouchers</TableHead>
-                    <TableHead>File</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>Jina la Bandiko</TableHead>
+                    <TableHead>Tarehe ya Kupakia</TableHead>
+                    <TableHead>Vocha</TableHead>
+                    <TableHead>Faili</TableHead>
+                    <TableHead className="text-right">Vitendo</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredRolls.map((roll) => (
                     <TableRow key={roll.id}>
                       <TableCell className="font-medium">{roll.name}</TableCell>
-                      <TableCell>{new Date(roll.uploadDate).toLocaleDateString()}</TableCell>
+                      <TableCell>{formatDate(roll.uploadDate)}</TableCell>
                       <TableCell>
-                        <Badge variant="secondary">{roll.voucherCount} codes</Badge>
+                        <Badge variant="secondary">{roll.voucherCount} nambari</Badge>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">{roll.fileName}</TableCell>
                       <TableCell className="text-right">
@@ -132,19 +140,17 @@ export function VoucherList() {
                             <DialogContent className="max-w-2xl">
                               <DialogHeader>
                                 <DialogTitle>{roll.name}</DialogTitle>
-                                <DialogDescription>
-                                  Uploaded on {new Date(roll.uploadDate).toLocaleDateString()}
-                                </DialogDescription>
+                                <DialogDescription>Imepakiwa tarehe {formatDate(roll.uploadDate)}</DialogDescription>
                               </DialogHeader>
                               <div className="space-y-4">
                                 {roll.description && (
                                   <div>
-                                    <h4 className="text-sm font-semibold mb-1">Description</h4>
+                                    <h4 className="text-sm font-semibold mb-1">Maelezo</h4>
                                     <p className="text-sm text-muted-foreground">{roll.description}</p>
                                   </div>
                                 )}
                                 <div>
-                                  <h4 className="text-sm font-semibold mb-2">Voucher Codes ({roll.voucherCount})</h4>
+                                  <h4 className="text-sm font-semibold mb-2">Nambari za Vocha ({roll.voucherCount})</h4>
                                   <div className="max-h-96 overflow-y-auto border rounded-lg p-4 bg-muted">
                                     <pre className="text-xs font-mono">{roll.codes.join("\n")}</pre>
                                   </div>
@@ -169,11 +175,11 @@ export function VoucherList() {
         </CardContent>
       </Card>
 
-      {/* Purchased Vouchers Section */}
+      {/* Purchased Vouchers Section - Translated */}
       <Card>
         <CardHeader>
-          <CardTitle>Purchased Vouchers</CardTitle>
-          <CardDescription>Track vouchers purchased by users with their contact information</CardDescription>
+          <CardTitle>Vocha Zilizouzwa</CardTitle>
+          <CardDescription>Fuatilia vocha zilizouzwa na taarifa za watumiaji</CardDescription>
         </CardHeader>
         <CardContent>
           <PurchasedVouchers />
@@ -199,17 +205,29 @@ function PurchasedVouchers() {
       await navigator.clipboard.writeText(code)
       setCopiedCode(code)
       toast({
-        title: "Copied!",
-        description: "Voucher code copied to clipboard",
+        title: "Imenakiliwa!",
+        description: "Nambari ya vocha imenakiliwa",
       })
       setTimeout(() => setCopiedCode(null), 2000)
     } catch (err) {
       toast({
-        title: "Copy Failed",
-        description: "Please copy the code manually",
+        title: "Kunakili Kumeshindikana",
+        description: "Tafadhali nakili nambari wewe mwenyewe",
         variant: "destructive",
       })
     }
+  }
+
+  const formatPrice = (price: number) => {
+    return price.toLocaleString("sw-TZ")
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("sw-TZ", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    })
   }
 
   const filteredVouchers = vouchers.filter(
@@ -223,7 +241,7 @@ function PurchasedVouchers() {
   if (vouchers.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        <p>No vouchers purchased yet</p>
+        <p>Hakuna vocha zilizouzwa bado</p>
       </div>
     )
   }
@@ -233,7 +251,7 @@ function PurchasedVouchers() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
-          placeholder="Search by code, name, email, or phone..."
+          placeholder="Tafuta kwa nambari, jina, barua pepe, au simu..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10"
@@ -243,15 +261,15 @@ function PurchasedVouchers() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Voucher Code</TableHead>
-              <TableHead>Plan</TableHead>
-              <TableHead>User Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Purchase Date</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>Nambari ya Vocha</TableHead>
+              <TableHead>Mpango</TableHead>
+              <TableHead>Jina la Mteja</TableHead>
+              <TableHead>Barua Pepe</TableHead>
+              <TableHead>Simu</TableHead>
+              <TableHead>Tarehe</TableHead>
+              <TableHead>Kiasi</TableHead>
+              <TableHead>Hali</TableHead>
+              <TableHead className="text-right">Vitendo</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -259,13 +277,15 @@ function PurchasedVouchers() {
               <TableRow key={index}>
                 <TableCell className="font-mono text-sm">{voucher.code}</TableCell>
                 <TableCell className="font-medium">{voucher.plan}</TableCell>
-                <TableCell>{voucher.userName || "N/A"}</TableCell>
+                <TableCell>{voucher.userName || "Haijulikani"}</TableCell>
                 <TableCell>{voucher.userEmail}</TableCell>
                 <TableCell>{voucher.userPhone}</TableCell>
-                <TableCell>{new Date(voucher.purchaseDate).toLocaleDateString()}</TableCell>
-                <TableCell className="font-semibold">KSH {voucher.price}</TableCell>
+                <TableCell>{formatDate(voucher.purchaseDate)}</TableCell>
+                <TableCell className="font-semibold">TSH {formatPrice(voucher.price)}</TableCell>
                 <TableCell>
-                  <Badge variant={voucher.status === "active" ? "default" : "secondary"}>{voucher.status}</Badge>
+                  <Badge variant={voucher.status === "active" ? "default" : "secondary"}>
+                    {voucher.status === "active" ? "Hai" : "Imeisha"}
+                  </Badge>
                 </TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="sm" onClick={() => handleCopyCode(voucher.code)}>

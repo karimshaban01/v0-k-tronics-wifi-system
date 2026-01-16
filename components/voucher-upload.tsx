@@ -30,17 +30,15 @@ export function VoucherUpload() {
       return
     }
 
-    // Read file and parse voucher codes
     const reader = new FileReader()
     reader.onload = (event) => {
       const text = event.target?.result as string
       const codes = text
         .split("\n")
-        .slice(7) // Skip the first 7 rows
-        .map((line) => line.trim().replace(/"/g, "")) // Remove all double quotes
+        .slice(7)
+        .map((line) => line.trim().replace(/"/g, ""))
         .filter((line) => line.length > 0)
 
-      // Store voucher roll
       const rolls = JSON.parse(localStorage.getItem("voucherRolls") || "[]")
       rolls.push({
         id: Date.now().toString(),
@@ -66,18 +64,18 @@ export function VoucherUpload() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Upload Voucher Roll</CardTitle>
+        <CardTitle>Pakia Bandiko la Vocha</CardTitle>
         <CardDescription>
-          Upload a CSV or text file containing voucher codes (first voucher starts at row 8)
+          Pakia faili ya CSV au maandishi yenye nambari za vocha (vocha ya kwanza inaanza mstari wa 8)
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleUpload} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="rollName">Roll Name</Label>
+            <Label htmlFor="rollName">Jina la Bandiko</Label>
             <Input
               id="rollName"
-              placeholder="e.g., Daily Vouchers - January 2024"
+              placeholder="mfano, Vocha za Kila Siku - Januari 2024"
               value={rollName}
               onChange={(e) => setRollName(e.target.value)}
               required
@@ -85,10 +83,10 @@ export function VoucherUpload() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description (Optional)</Label>
+            <Label htmlFor="description">Maelezo (Hiari)</Label>
             <Textarea
               id="description"
-              placeholder="Add notes about this voucher roll..."
+              placeholder="Ongeza maelezo kuhusu bandiko hili la vocha..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -96,7 +94,7 @@ export function VoucherUpload() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="file">Voucher File</Label>
+            <Label htmlFor="file">Faili ya Vocha</Label>
             <div className="flex items-center gap-2">
               <Input id="file" type="file" accept=".txt,.csv" onChange={handleFileChange} required className="flex-1" />
               {file && (
@@ -107,33 +105,33 @@ export function VoucherUpload() {
               )}
             </div>
             <p className="text-xs text-muted-foreground">
-              Upload a text or CSV file with voucher codes (first voucher starts at row 8)
+              Pakia faili ya maandishi au CSV yenye nambari za vocha (vocha ya kwanza inaanza mstari wa 8)
             </p>
           </div>
 
           {uploadSuccess && (
             <Alert className="bg-green-50 border-green-200">
               <CheckCircle className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-800">Voucher roll uploaded successfully!</AlertDescription>
+              <AlertDescription className="text-green-800">Bandiko la vocha limepakiwa kwa mafanikio!</AlertDescription>
             </Alert>
           )}
 
           <Button type="submit" className="w-full" disabled={!file || !rollName}>
             <Upload className="w-4 h-4 mr-2" />
-            Upload Voucher Roll
+            Pakia Bandiko la Vocha
           </Button>
         </form>
 
         <div className="mt-6 p-4 bg-muted rounded-lg">
-          <h4 className="font-semibold mb-2 text-sm">File Format Example:</h4>
+          <h4 className="font-semibold mb-2 text-sm">Mfano wa Muundo wa Faili:</h4>
           <pre className="text-xs font-mono bg-background p-2 rounded border">
-            {`... header rows 1-7 (will be skipped) ...
+            {`... mistari ya kichwa 1-7 (itarukwa) ...
 KT-ABC123-XYZ
 KT-DEF456-UVW
 KT-GHI789-RST`}
           </pre>
           <p className="text-xs text-muted-foreground mt-2">
-            Note: First 7 rows are skipped. Voucher codes start from row 8.
+            Kumbuka: Mistari 7 ya kwanza inarukwa. Nambari za vocha zinaanza mstari wa 8.
           </p>
         </div>
       </CardContent>

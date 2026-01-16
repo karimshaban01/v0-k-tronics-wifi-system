@@ -15,41 +15,41 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 const voucherPlans = [
   {
-    id: "1hour",
-    name: "1 Hour Access",
-    duration: "1 Hour",
-    price: 50,
+    id: "1day",
+    name: "Pasi ya Siku 1",
+    duration: "Saa 24",
+    price: 500,
     devices: 1,
     speed: "5 Mbps",
-    features: ["Basic speed", "1 device", "No support"],
+    features: ["Kasi ya kawaida", "Kifaa 1", "Msaada wa barua pepe"],
   },
   {
-    id: "1day",
-    name: "Daily Pass",
-    duration: "24 Hours",
-    price: 200,
+    id: "2days",
+    name: "Pasi ya Siku 2",
+    duration: "Siku 2",
+    price: 1000,
     devices: 2,
     speed: "10 Mbps",
-    features: ["Standard speed", "2 devices", "Email support"],
+    features: ["Kasi nzuri", "Vifaa 2", "Msaada wa kipaumbele"],
     popular: true,
   },
   {
     id: "1week",
-    name: "Weekly Pass",
-    duration: "7 Days",
-    price: 1000,
+    name: "Pasi ya Wiki",
+    duration: "Siku 7",
+    price: 3000,
     devices: 5,
     speed: "20 Mbps",
-    features: ["High speed", "5 devices", "Priority support", "No data cap"],
+    features: ["Kasi ya juu", "Vifaa 5", "Msaada wa kipaumbele", "Data isiyo na kikomo"],
   },
   {
     id: "1month",
-    name: "Monthly Pass",
-    duration: "30 Days",
-    price: 3500,
+    name: "Pasi ya Mwezi",
+    duration: "Siku 30",
+    price: 10000,
     devices: 10,
     speed: "50 Mbps",
-    features: ["Maximum speed", "10 devices", "24/7 support", "Unlimited data"],
+    features: ["Kasi ya juu kabisa", "Vifaa 10", "Msaada 24/7", "Data isiyo na kikomo"],
   },
 ]
 
@@ -59,7 +59,7 @@ const paymentMethods = [
   { id: "tigo", name: "Tigo Pesa", icon: "📱" },
   { id: "halopesa", name: "HaloPesa", icon: "📱" },
   { id: "ttcl", name: "TTCL", icon: "📱" },
-  { id: "card", name: "Card Payment", icon: "💳" },
+  { id: "card", name: "Kadi ya Benki", icon: "💳" },
 ]
 
 interface PurchasedVoucher {
@@ -94,11 +94,9 @@ export function VoucherPurchase() {
   const handleCheckout = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Get available voucher codes from uploaded rolls
     const voucherRolls = JSON.parse(localStorage.getItem("voucherRolls") || "[]")
     const purchasedVouchers = JSON.parse(localStorage.getItem("purchasedVouchers") || "[]")
 
-    // Get all available codes (not yet purchased)
     const allAvailableCodes: string[] = []
     voucherRolls.forEach((roll: any) => {
       roll.codes.forEach((code: string) => {
@@ -108,22 +106,19 @@ export function VoucherPurchase() {
       })
     })
 
-    // Check if there are available vouchers
     if (allAvailableCodes.length === 0) {
       toast({
-        title: "No Vouchers Available",
-        description: "Sorry, there are no available vouchers at the moment. Please contact admin.",
+        title: "Hakuna Vocha Zinazopatikana",
+        description: "Samahani, hakuna vocha zinazopatikana kwa sasa. Tafadhali wasiliana na msimamizi.",
         variant: "destructive",
       })
       setShowCheckout(false)
       return
     }
 
-    // Assign the first available voucher
     const voucherCode = allAvailableCodes[0]
     const plan = voucherPlans.find((p) => p.id === selectedPlan)!
 
-    // Create purchased voucher record
     const newPurchase: PurchasedVoucher = {
       code: voucherCode,
       plan: plan.name,
@@ -136,7 +131,6 @@ export function VoucherPurchase() {
       userPhone: userPhone,
     }
 
-    // Store in purchasedVouchers
     purchasedVouchers.push(newPurchase)
     localStorage.setItem("purchasedVouchers", JSON.stringify(purchasedVouchers))
 
@@ -154,51 +148,53 @@ export function VoucherPurchase() {
         await navigator.clipboard.writeText(purchasedVoucher.code)
         setCopied(true)
         toast({
-          title: "Copied!",
-          description: "Voucher code copied to clipboard",
+          title: "Imenakiliwa!",
+          description: "Nambari ya vocha imenakiliwa",
         })
         setTimeout(() => setCopied(false), 2000)
       } catch (err) {
         toast({
-          title: "Copy Failed",
-          description: "Please copy the code manually",
+          title: "Kunakili Kumeshindikana",
+          description: "Tafadhali nakili nambari wewe mwenyewe",
           variant: "destructive",
         })
       }
     }
   }
 
+  const formatPrice = (price: number) => {
+    return price.toLocaleString("sw-TZ")
+  }
+
   return (
     <>
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-center mb-2">Choose Your Plan</h2>
-        <p className="text-center text-muted-foreground">Select the perfect WiFi voucher for your needs</p>
+        <h2 className="text-3xl font-bold text-center mb-2">Chagua Mpango Wako</h2>
+        <p className="text-center text-muted-foreground">Chagua vocha ya WiFi inayofaa mahitaji yako</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {voucherPlans.map((plan) => (
           <Card key={plan.id} className={`relative ${plan.popular ? "border-blue-600 border-2 shadow-lg" : ""}`}>
             {plan.popular && (
-              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600">Most Popular</Badge>
+              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600">Maarufu Zaidi</Badge>
             )}
             <CardHeader>
               <CardTitle className="text-xl">{plan.name}</CardTitle>
               <CardDescription>{plan.duration}</CardDescription>
               <div className="mt-4">
-                <span className="text-4xl font-bold">KSH {plan.price}</span>
+                <span className="text-4xl font-bold">TSH {formatPrice(plan.price)}</span>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm">
                   <Wifi className="w-4 h-4 text-blue-600" />
-                  <span>Speed: {plan.speed}</span>
+                  <span>Kasi: {plan.speed}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="w-4 h-4 text-green-600" />
-                  <span>
-                    {plan.devices} device{plan.devices > 1 ? "s" : ""}
-                  </span>
+                  <span>{plan.devices > 1 ? `Vifaa ${plan.devices}` : `Kifaa ${plan.devices}`}</span>
                 </div>
               </div>
               <div className="space-y-2">
@@ -212,7 +208,7 @@ export function VoucherPurchase() {
             </CardContent>
             <CardFooter>
               <Button className="w-full" onClick={() => handlePurchase(plan.id)}>
-                Purchase Voucher
+                Nunua Vocha
               </Button>
             </CardFooter>
           </Card>
@@ -223,38 +219,38 @@ export function VoucherPurchase() {
       <Dialog open={showCheckout} onOpenChange={setShowCheckout}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Complete Your Purchase</DialogTitle>
-            <DialogDescription>Enter your details and select payment method</DialogDescription>
+            <DialogTitle>Kamilisha Ununuzi Wako</DialogTitle>
+            <DialogDescription>Jaza taarifa zako na uchague njia ya malipo</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleCheckout} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">Jina Kamili</Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="John Doe"
+                placeholder="Jina Kamili"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">Barua Pepe</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="your@email.com"
+                placeholder="barua@mfano.com"
                 value={userEmail}
                 onChange={(e) => setUserEmail(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone">Nambari ya Simu</Label>
               <Input
                 id="phone"
                 type="tel"
-                placeholder="+255 700 000 000"
+                placeholder="0700 000 000"
                 value={userPhone}
                 onChange={(e) => setUserPhone(e.target.value)}
                 required
@@ -262,7 +258,7 @@ export function VoucherPurchase() {
             </div>
 
             <div className="space-y-3">
-              <Label>Select Payment Method</Label>
+              <Label>Chagua Njia ya Malipo</Label>
               <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
                 <div className="grid grid-cols-2 gap-3">
                   {paymentMethods.map((method) => (
@@ -284,8 +280,8 @@ export function VoucherPurchase() {
             <div className="space-y-2">
               <Label htmlFor="payment-number">
                 {paymentMethod === "card"
-                  ? "Card Number"
-                  : `${paymentMethods.find((m) => m.id === paymentMethod)?.name} Number`}
+                  ? "Nambari ya Kadi"
+                  : `Nambari ya ${paymentMethods.find((m) => m.id === paymentMethod)?.name}`}
               </Label>
               <Input
                 id="payment-number"
@@ -299,17 +295,19 @@ export function VoucherPurchase() {
 
             <div className="bg-muted p-4 rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm">Selected Plan:</span>
+                <span className="text-sm">Mpango Uliochaguliwa:</span>
                 <span className="font-semibold">{voucherPlans.find((p) => p.id === selectedPlan)?.name}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm">Total Amount:</span>
-                <span className="text-xl font-bold">KSH {voucherPlans.find((p) => p.id === selectedPlan)?.price}</span>
+                <span className="text-sm">Jumla ya Malipo:</span>
+                <span className="text-xl font-bold">
+                  TSH {formatPrice(voucherPlans.find((p) => p.id === selectedPlan)?.price || 0)}
+                </span>
               </div>
             </div>
             <Button type="submit" className="w-full">
               <CreditCard className="w-4 h-4 mr-2" />
-              Complete Payment
+              Kamilisha Malipo
             </Button>
           </form>
         </DialogContent>
@@ -318,49 +316,49 @@ export function VoucherPurchase() {
       <Dialog open={!!purchasedVoucher} onOpenChange={() => setPurchasedVoucher(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Voucher Purchased Successfully!</DialogTitle>
-            <DialogDescription>Save your voucher code to connect to WiFi</DialogDescription>
+            <DialogTitle>Vocha Imenunuliwa Kwa Mafanikio!</DialogTitle>
+            <DialogDescription>Hifadhi nambari yako ya vocha kuunganisha na WiFi</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border-2 border-blue-200">
-              <p className="text-sm text-muted-foreground mb-2">Your Voucher Code:</p>
+              <p className="text-sm text-muted-foreground mb-2">Nambari Yako ya Vocha:</p>
               <p className="text-2xl font-bold text-center font-mono break-all mb-4">{purchasedVoucher?.code}</p>
               <Button variant="outline" className="w-full bg-transparent" onClick={handleCopyCode}>
                 {copied ? (
                   <>
                     <CheckCircle2 className="w-4 h-4 mr-2 text-green-600" />
-                    Copied!
+                    Imenakiliwa!
                   </>
                 ) : (
                   <>
                     <Copy className="w-4 h-4 mr-2" />
-                    Copy Code
+                    Nakili Nambari
                   </>
                 )}
               </Button>
             </div>
             <div className="bg-muted p-4 rounded-lg space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Plan:</span>
+                <span className="text-muted-foreground">Mpango:</span>
                 <span className="font-medium">{purchasedVoucher?.plan}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Duration:</span>
+                <span className="text-muted-foreground">Muda:</span>
                 <span className="font-medium">{purchasedVoucher?.duration}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Amount Paid:</span>
-                <span className="font-medium">KSH {purchasedVoucher?.price}</span>
+                <span className="text-muted-foreground">Kiasi Kilicholipwa:</span>
+                <span className="font-medium">TSH {formatPrice(purchasedVoucher?.price || 0)}</span>
               </div>
             </div>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>1. Connect to K-TRONICS WiFi network</p>
-              <p>2. Open your browser and enter the voucher code</p>
-              <p>3. Enjoy your internet access!</p>
+              <p>1. Unganisha na mtandao wa K-TRONICS WiFi</p>
+              <p>2. Fungua kivinjari chako na uweke nambari ya vocha</p>
+              <p>3. Furahia matumizi yako ya intaneti!</p>
             </div>
 
             <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg space-y-2">
-              <p className="font-semibold text-sm text-blue-900">Need Help? Contact Support:</p>
+              <p className="font-semibold text-sm text-blue-900">Unahitaji Msaada? Wasiliana Nasi:</p>
               <div className="space-y-1 text-sm">
                 <div className="flex items-center gap-2 text-blue-800">
                   <Phone className="w-4 h-4" />
@@ -374,7 +372,7 @@ export function VoucherPurchase() {
             </div>
 
             <Button className="w-full" onClick={() => setPurchasedVoucher(null)}>
-              Got it!
+              Nimeelewa!
             </Button>
           </div>
         </DialogContent>

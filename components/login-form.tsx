@@ -24,12 +24,11 @@ export function LoginForm({ onBack }: LoginFormProps) {
     e.preventDefault()
     setError("")
 
-    // Simple authentication check
     if (username === "admin" && password === "admin123") {
       localStorage.setItem("isAdmin", "true")
       router.push("/admin")
     } else {
-      setError("Invalid username or password")
+      setError("Jina la mtumiaji au nywila si sahihi")
     }
   }
 
@@ -38,7 +37,7 @@ export function LoginForm({ onBack }: LoginFormProps) {
       <div className="w-full max-w-md">
         <Button variant="ghost" onClick={onBack} className="mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
+          Rudi Nyumbani
         </Button>
 
         <Card>
@@ -46,28 +45,28 @@ export function LoginForm({ onBack }: LoginFormProps) {
             <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
               <Wifi className="w-8 h-8 text-white" />
             </div>
-            <CardTitle className="text-2xl">Admin Login</CardTitle>
-            <CardDescription>Access the voucher management dashboard</CardDescription>
+            <CardTitle className="text-2xl">Ingia kwa Msimamizi</CardTitle>
+            <CardDescription>Fikia dashibodi ya usimamizi wa vocha</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">Jina la Mtumiaji</Label>
                 <Input
                   id="username"
                   type="text"
-                  placeholder="Enter username"
+                  placeholder="Weka jina la mtumiaji"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Nywila</Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter password"
+                  placeholder="Weka nywila"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -75,9 +74,9 @@ export function LoginForm({ onBack }: LoginFormProps) {
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
               <Button type="submit" className="w-full">
-                Login
+                Ingia
               </Button>
-              <p className="text-xs text-center text-muted-foreground">Default credentials: admin / admin123</p>
+              <p className="text-xs text-center text-muted-foreground">Taarifa za kuingia: admin / admin123</p>
             </form>
           </CardContent>
         </Card>
