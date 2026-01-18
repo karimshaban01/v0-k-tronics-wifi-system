@@ -1,13 +1,11 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, Wifi } from "lucide-react"
+import { ArrowLeft, Wifi, Shield } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 interface LoginFormProps {
@@ -33,25 +31,36 @@ export function LoginForm({ onBack }: LoginFormProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <Button variant="ghost" onClick={onBack} className="mb-4">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
+        <button 
+          onClick={onBack} 
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-sky-600 mb-6 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
           Rudi Nyumbani
-        </Button>
+        </button>
 
-        <Card>
-          <CardHeader className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <div className="bg-white rounded-2xl shadow-xl border border-sky-100 overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-br from-sky-500 via-sky-600 to-blue-700 p-6 text-center">
+            <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mx-auto mb-4">
               <Wifi className="w-8 h-8 text-white" />
             </div>
-            <CardTitle className="text-2xl">Ingia kwa Msimamizi</CardTitle>
-            <CardDescription>Fikia dashibodi ya usimamizi wa vocha</CardDescription>
-          </CardHeader>
-          <CardContent>
+            <h1 className="text-xl font-bold text-white">K-TRONICS</h1>
+            <p className="text-sky-100 text-sm mt-1">Paneli ya Msimamizi</p>
+          </div>
+
+          {/* Form */}
+          <div className="p-6">
+            <div className="flex items-center gap-2 justify-center mb-6">
+              <Shield className="w-4 h-4 text-sky-600" />
+              <span className="text-sm text-muted-foreground">Eneo Lililolindwa</span>
+            </div>
+
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Jina la Mtumiaji</Label>
+                <Label htmlFor="username" className="text-sm">Jina la Mtumiaji</Label>
                 <Input
                   id="username"
                   type="text"
@@ -59,10 +68,11 @@ export function LoginForm({ onBack }: LoginFormProps) {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
+                  className="h-11"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Nywila</Label>
+                <Label htmlFor="password" className="text-sm">Nywila</Label>
                 <Input
                   id="password"
                   type="password"
@@ -70,16 +80,30 @@ export function LoginForm({ onBack }: LoginFormProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  className="h-11"
                 />
               </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" className="w-full">
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 text-sm p-3 rounded-lg">
+                  {error}
+                </div>
+              )}
+              <Button 
+                type="submit" 
+                className="w-full h-11 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 font-semibold"
+              >
                 Ingia
               </Button>
-              <p className="text-xs text-center text-muted-foreground">Taarifa za kuingia: admin / admin123</p>
+              <p className="text-[10px] text-center text-muted-foreground bg-muted/50 p-2 rounded-lg">
+                Taarifa za majaribio: admin / admin123
+              </p>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        <p className="text-center text-xs text-muted-foreground mt-6">
+          &copy; 2026 K-TRONICS WiFi
+        </p>
       </div>
     </div>
   )
